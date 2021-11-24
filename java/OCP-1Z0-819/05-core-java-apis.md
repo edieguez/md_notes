@@ -490,3 +490,426 @@ System.out.println(first == third.intern());  // true
 ```
 
 Every time you use the `new` operator, you're telling to Java to **not** use the `String pool`.
+
+## Understanding Java Arrays
+
+`String` and `StringBuilder` are *sequences of characters*. Internally, those classes are implemented using an *array of characters*.
+
+An array is an area in memory with a fixed size an it will store data of a predefined type.
+
+```java
+char[] letters; // Array of char's
+int[] numbers;  // Array of int's
+
+int[] numbers2 = new int[] {42, 55, 99};
+
+int[] numbers2 = {42, 55, 99};
+
+// Other valid array syntaxes
+int[] numAnimals;
+int [] numAnimals2;
+int []numAnimals3;
+int numAnimals4[];
+int numAnimals5 [];
+
+// This declaration
+int[] ids, types;
+
+// Is the same as these two sentences
+int[] ids;
+int types;
+```
+
+## Creating an array with reference variables
+
+```java
+String [] bugs = { "cricket", "beetle", "ladybug" };
+String [] alias = bugs;
+
+System.out.println(bugs.equals(alias));     // true
+System.out.println(bugs.toString());        // [Ljava.lang.String;@160bc7c0
+System.out.println(Arrays.toString(alias)); // [cricket, beetle, ladybug]
+System.out.println(alias.length);           // 3
+
+bugs[0] = "butterfly";
+bugs[0] = new StringBuilder(); // Does not compile
+bugs[bugs.length] = "ant";     // Throws ArrayIndexOutOfBoundsException
+
+String names[]; // This array is equals to null
+```
+
+## Sorting
+
+You can use the method `java.util.Arrays.sort()` to sort an array. Unfortunately, it orders the elements in alphabetical order. That can lead to unexpected behaviours. You can solve this by using a `Comparator` but that is a topic outside the scope of this certification.
+
+```java
+int[] numbers = { 6, 9, 1 };
+
+Arrays.sort(numbers);
+
+for (int i = 0; i < numbers.length; i++)
+    System.out.print(numbers[i] +  " ");
+
+// prints 1 6 9
+
+String[] strings = {"10", "9", "100"};
+
+Arrays.sort(strings);
+
+for (String string : strings)
+    System.out.print(string + " ");
+
+// prints 10 100 9
+```
+
+## Searching
+
+You can sort an array using `java.util.Arrays.binarySearch`. These are the possible results
+
+| Scenario                                 | Result                                                                                                                         |
+|------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Target element found in sorted array     | Index of match                                                                                                                 |
+| Target element not found in sorted array | Negative value showing one smaller than the negative of the index, where a match needs to be inserted to preserve sorted order |
+| Unsorted array                           | A surprise—this result isn’t predictable                                                                                       |
+
+## Comparing
+
+### [compare()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Arrays.html#compare(boolean%5B%5D,boolean%5B%5D))
+
+You can compare two arrays using `java.util.Arrays.compare`. This are the possible return values.
+
+* A negative number means the first array is smaller than the second.
+* A zero means the arrays are equal.
+* A positive number means the first array is larger than the second.
+
+These are the rules related to this method.
+
+* If both arrays are the same length and have the same values in each spot in the same order, return zero.
+* If all the elements are the same but the second array has extra elements at the end, return a negative number.
+* If all the elements are the same but the first array has extra elements at the end, return a positive number.
+* If the first element that differs is smaller in the first array, return a negative number.
+* If the first element that differs is larger in the first array, return a positive number.
+
+And also, these rules apply to the compared values
+
+* `null` is smaller than any other value.
+* For numbers, normal numeric order applies.
+* For strings, one is smaller if it is a prefix of another.
+* For strings/characters, numbers are smaller than letters.
+* For strings/characters, uppercase is smaller than lowercase.
+
+### [mismatch()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Arrays.html#mismatch(boolean%5B%5D,boolean%5B%5D))
+
+Finds and returns the index of the first mismatch between two boolean arrays, otherwise return `-1` if no mismatch is found.
+
+## Varargs
+
+Is another way to receive an array as argument. It should be the las element in the argument list
+
+```java
+public static void main(String... args)                    // varargs
+
+public void genericMethod(String param, String... varargs) // varargs
+
+public void genericMethod(String... varargs, String param) // Does not compile
+```
+
+## Multidimensional arrays
+
+```java
+int[][] vars1;               // 2D array
+int vars2 [][];              // 2D array
+int[] vars3[];               // 2D array
+int[] vars4 [], space [][];  // a 2D AND a 3D array
+
+String [][] rectangle = new String[3][2]; // Array with defined dimensions
+```
+
+## Understanding an [ArrayList](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html)
+
+### Creating an ArrayList
+
+```java
+ArrayList list1 = new ArrayList();      // Default initial capacity: 10
+ArrayList list2 = new ArrayList(10);    // Initical capacity: 10
+ArrayList list3 = new ArrayList(list2); // ArrayList from a collection
+
+// Without a type defined, ArrayList defaults to Object
+var listA = new ArrayList<>();
+Object listB = new ArrayList<>();
+
+// More examples
+List<String> list4 = new ArrayList<>();
+ArrayList<String> list5 = new List<>(); // DOES NOT COMPILE
+```
+
+## Using an ArrayList
+
+### add()
+
+* [boolean add(E element)](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#add(E))
+* [void add(int index, E element)](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#add(int,E))
+
+```java
+ArrayList list = new ArrayList();
+
+list.add("hawk");         // [hawk]
+list.add(Boolean.TRUE);   // [hawk, true]
+list.add(1, "middle");    // [hawk, middle, true]
+
+System.out.println(list); // [hawk, middle, true]
+
+// Invalid code example
+ArrayList<String> safer = new ArrayList<>();
+
+safer.add("sparrow");
+safer.add(Boolean.TRUE);    // DOES NOT COMPILE
+```
+
+### remove()
+
+* [boolean remove(Object object)](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#remove(java.lang.Object))
+* [E remove(int index)](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#remove(int))
+
+```java
+List<String> birds = new ArrayList<>();
+
+birds.add("hawk");     // [hawk]
+birds.add("hawk");     // [hawk, hawk]
+
+System.out.println(birds.remove("cardinal")); // prints false
+System.out.println(birds.remove("hawk"));     // prints true
+System.out.println(birds.remove(0));          // prints hawk
+System.out.println(birds);                    // []
+```
+
+### [set()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#set(int,E))
+
+```java
+List<String> birds = new ArrayList<>();
+
+birds.add("hawk");                    // [hawk]
+System.out.println(birds.size());     // 1
+
+birds.set(0, "robin");               // [robin]
+System.out.println(birds.size());     // 1
+
+System.out.println(birds.isEmpty());  // false
+
+birds.set(1, "robin");               // IndexOutOfBoundsException
+```
+
+### [isEmpty()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#isEmpty()) and [size()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#size())
+
+`isEmpty()` returns `true` if the `ArrayList` is empty, otherwise returns `false`.
+`size()` returns the current number of elements in the list.
+
+### [clear()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#clear())
+
+Removes all of the elements from this list. The list will be empty after this call returns.
+
+### [contains()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html#contains(java.lang.Object))
+
+Returns true if this list contains the specified element. More formally, returns true if and only if this list contains at least one element e such that Objects.equals(o, e).
+
+### equals()
+
+Compare two lists to see whether they contain the same elements in the same order.
+
+```java
+List<String> one = new ArrayList<>();
+List<String> two = new ArrayList<>();
+
+System.out.println(one.equals(two));  // true
+
+one.add("a");                         // [a]
+System.out.println(one.equals(two));  // false
+
+two.add("a");                         // [a]
+System.out.println(one.equals(two));  // true
+
+one.add("b");                         // [a,b]
+two.add(0, "b");                      // [b,a]
+System.out.println(one.equals(two));  // false
+```
+
+## Wrapper classes
+
+| Primitive type | Wrapper class | Example of creating        |
+|----------------|---------------|----------------------------|
+| boolean        | Boolean       | Boolean.valueOf(true)      |
+| boolean        | Byte          | Byte.valueOf((byte) 1)     |
+| boolean        | Short         | Short.valueOf((short) 1)   |
+| int            | Integer       | Integer.valueOf(1)         |
+| long           | Long          | Long.valueOf(1)            |
+| float          | Float         | Float.valueOf((float) 1.0) |
+| double         | Double        | Double.valueOf(1.0)        |
+| char           | Character     | Character.valueOf('c')     |
+
+## Autoboxing and unboxing
+
+These features are present since Java 5. With this you don't have to worry about switching between the primitive type and its wrapper.
+
+```java
+List<Integer> numbers = new ArrayList<>();
+
+numbers.add(null);
+numbers.add(Integer.valueOf(2));
+numbers.add(new Integer(3));
+
+System.out.println(numbers);
+
+int integer = numbers.get(0); // NullPointerException. Why?
+numbers.remove(3);            // IndexOutOfBoundsException. Why?
+```
+
+## Converting between array and List
+
+### toArray()
+
+```java
+List<String> list = new ArrayList<>();
+
+list.add("hawk");
+list.add("robin");
+
+Object[] objectArray = list.toArray();
+String[] stringArray = list.toArray(new String[0]);
+
+list.clear();
+
+System.out.println(objectArray.length);     // 2
+System.out.println(stringArray.length);     // 2
+```
+
+### Arrays.toList()
+
+```java
+String[] array = {"hawk", "robin"};       // [hawk, robin]
+List<String> list = Arrays.asList(array); // returns fixed size list
+
+System.out.println(list.size());          // 2
+
+list.set(1, "test");                      // [hawk, test]
+array[0] = "new";                         // [new, test]
+
+System.out.print(Arrays.toString(array)); // [new, test]
+
+list.remove(1);     // throws UnsupportedOperationException
+```
+
+## Using varargs to create a List
+
+```java
+List<String> list1 = Arrays.asList("one", "two");
+List<String> list2 = List.of("one", "two"); // Does not allow modifications
+```
+
+## Array and list conversions
+
+|                                                                           | toArray() | Arrays.asList()    | List.of()          |
+|---------------------------------------------------------------------------|-----------|--------------------|--------------------|
+| Type converting from                                                      | List      | Array (or varargs) | Array (or varargs) |
+| Type created                                                              | Array     | List               | List               |
+| Allowed to remove values from created object                              | No        | No                 | No                 |
+| Allowed to change values in the created object                            | Yes       | Yes                | No                 |
+| Changing values in the created object affects the original or vice versa. | No        | Yes                | N/A                |
+
+## Sorting lists
+
+Unlike `java.util.Arrays.sort()`, `Collections.sort()` ordert the elements using the *natural order*.
+
+```java
+List<Integer> numbers = new ArrayList<>();
+numbers.add(99);
+numbers.add(5);
+numbers.add(81);
+
+Collections.sort(numbers);
+
+System.out.println(numbers); // [5, 81, 99]
+```
+
+## Creating Sets and Maps
+
+## Introducing sets
+
+A `Set` is a collection of objects that cannot contain duplicates.
+
+```java
+Set<Integer> set = new HashSet<>();
+
+System.out.println(set.add(66)); // true
+System.out.println(set.add(66)); // false
+System.out.println(set.size()); // 1
+
+set.remove(66);
+
+System.out.println(set.isEmpty()); // true
+```
+
+## Introducing Maps
+
+A `Map` uses a key to identify values. The most common implementation is `HashMap`
+
+```java
+Map<String, String> map = new HashMap<>();
+
+map.put("koala", "bamboo");
+
+String food = map.get("koala"); // bamboo
+String other = map.getOrDefault("ant", "leaf"); // leaf
+
+for (String key : map.keySet())
+   System.out.println(key + " " + map.get(key)); // koala bamboo
+```
+
+## Common Map methods
+
+| Method                              | Description                                                     |
+|-------------------------------------|-----------------------------------------------------------------|
+| V get(Object key)                   | Returns the value mapped by key or null if none is mapped       |
+| V getOrDefault(Object key, V other) | Returns the value mapped by key or other if none is mapped      |
+| V put(K key, V value)               | Adds or replaces key/value pair. Returns previous value or null |
+| V remove(Object key)                | Removes and returns value mapped to key. Returns null if none   |
+| boolean containsKey(Object key)     | Returns whether key is in map                                   |
+| boolean containsValue(Object value) | Returns whether value is in map                                 |
+| Set keySet()                        | Returns set of all keys                                         |
+| Collection values()                 | Returns Collection of all values                                |
+
+## Calculating with Math APIs
+
+### [min()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Math.html#min(double,double)) and [max()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Math.html#max(double,double))
+
+```java
+int first = Math.max(3, 7);  // 7
+int second = Math.min(7, -9);  // -9
+```
+
+### [round()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Math.html#round(double))
+
+The `round()` method gets rid of the decimal portion of the value, choosing the next higher number if appropriate. If the fractional part is .5 or higher, we round up.
+
+There are two overloaded methods to ensure there is enough room to store a rounded double if needed. The following shows how to use this method:
+
+```java
+long low = Math.round(123.45); // 123
+long high = Math.round(123.50); // 124
+int fromFloat = Math.round(123.45f); // 123
+```
+
+### [pow()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Math.html#pow(double,double))
+
+The `pow()` method handles exponents. As you may recall from your elementary school math class, 32 means three squared. This is 3 * 3 or 9. Fractional exponents are allowed as well. Sixteen to the .5 power means the square root of 16, which is 4. (Don’t worry, you won’t have to do square roots on the exam.)
+
+```java
+double squared = Math.pow(5, 2); // 25.0
+```
+
+### [random()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Math.html#random())
+
+The `random()` method returns a value greater than or equal to 0 and less than 1.
+
+```java
+double num = Math.random();
+```
