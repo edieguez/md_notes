@@ -517,7 +517,7 @@ int[] ids, types;
 
 // Is the same as these two sentences
 int[] ids;
-int types;
+int[] types;
 ```
 
 ## Creating an array with reference variables
@@ -738,8 +738,8 @@ System.out.println(one.equals(two));  // false
 | Primitive type | Wrapper class | Example of creating        |
 |----------------|---------------|----------------------------|
 | boolean        | Boolean       | Boolean.valueOf(true)      |
-| boolean        | Byte          | Byte.valueOf((byte) 1)     |
-| boolean        | Short         | Short.valueOf((short) 1)   |
+| byte           | Byte          | Byte.valueOf((byte) 1)     |
+| short          | Short         | Short.valueOf((short) 1)   |
 | int            | Integer       | Integer.valueOf(1)         |
 | long           | Long          | Long.valueOf(1)            |
 | float          | Float         | Float.valueOf((float) 1.0) |
