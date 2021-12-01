@@ -59,3 +59,31 @@ sheep *= goat; // Compiles due to implicit casting
 There's a difference between *two objects are the same* and *two objects are equivalent*. That distinction does not exist for `numeric` and `boolean` values
 
 When comparing two objects using the equality operator `==`, it will return `true` if, and only if both variables point to the same object or their values are `null`
+
+## Logical operators
+
+| Operator | Description                                                                    |
+|----------|--------------------------------------------------------------------------------|
+| &        | Logical `AND` is `true` only if both values are `true`                         |
+| \|       | Inclusive `OR` is `true` if at least one of the values is `true`               |
+| ^        | Exclusive `XOR` is `true` only if one value is `true` and the other is `false` |
+| &&       | Short-circuit `AND`                                                            |
+| \|\|     | Short-circuit `OR`                                                             |
+
+## Avoiding a NullPointerException
+
+```java
+if (variable != null & variable.doSomething()) { // Could throw a NullPointerException
+    // Do something
+}
+
+if (variable != null && variable.doSomething()) { // Short-circuit AND
+    // Do something
+}
+```
+
+## Making decisitions with the ternary operator
+
+```java
+booleanExpression ? valueReturnedWhenTrue : valueReturnedWhenFalse;
+```
